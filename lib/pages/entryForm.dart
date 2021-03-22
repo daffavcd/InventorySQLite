@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsheet7/model/dbhelper.dart';
 import 'package:jobsheet7/model/item.dart';
 
 class EntryForm extends StatefulWidget {
@@ -10,6 +11,7 @@ class EntryForm extends StatefulWidget {
 
 //class controller
 class EntryFormState extends State<EntryForm> {
+  DbHelper dbHelper = DbHelper();
   Item item;
   EntryFormState(this.item);
   TextEditingController nameController = TextEditingController();
@@ -19,11 +21,13 @@ class EntryFormState extends State<EntryForm> {
   @override
   Widget build(BuildContext context) {
     //kondisi
+    bool check = false;
     if (item != null) {
       nameController.text = item.name;
       priceController.text = item.price.toString();
       qtyController.text = item.qty.toString();
       codeController.text = item.code.toString();
+      check = true;
     }
     //rubah
     return Scaffold(
@@ -155,6 +159,28 @@ class EntryFormState extends State<EntryForm> {
                   ],
                 ),
               ),
+              if (check == true)
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: RaisedButton(
+                          color: Theme.of(context).primaryColorDark,
+                          textColor: Theme.of(context).primaryColorLight,
+                          child: Text(
+                            'Delete',
+                            textScaleFactor: 1.5,
+                          ),
+                          onPressed: () {
+                            dbHelper.delete(item.id);
+                            Navigator.pop(context, item);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
             ],
           ),
         ));

@@ -12,10 +12,16 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  @override
   DbHelper dbHelper = DbHelper();
   int count = 0;
   List<Item> itemList;
   @override
+  void initState() {
+    super.initState();
+    updateListView();
+  }
+
   Widget build(BuildContext context) {
     if (itemList == null) {
       itemList = List<Item>();
@@ -81,12 +87,18 @@ class HomeState extends State<Home> {
               child: Icon(Icons.delete),
               onTap: () async {
                 //TODO 3 Panggil Fungsi untuk Delete dari DB berdasarkan Item
+                // Saya taruh di entry form pak button nya soalnya si UI tabrakan sama klik TODO 4
               },
             ),
             onTap: () async {
               var item =
                   await navigateToEntryForm(context, this.itemList[index]);
               //TODO 4 Panggil Fungsi untuk Edit data
+              if (item != null) {
+                int result = await dbHelper.update(item);
+
+                updateListView();
+              }
             },
           ),
         );
